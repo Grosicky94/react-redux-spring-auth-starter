@@ -41,11 +41,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
-//            String user = JWT.require(Algorithm.HMAC512(JWT_SECRET.getBytes()))
-//                    .build()
-//                    .verify(token.replace(TOKEN_PREFIX, ""))
-//                    .getSubject();
-
             String user = Jwts.parser()
                     .setSigningKey(JWT_SECRET)
                     .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))

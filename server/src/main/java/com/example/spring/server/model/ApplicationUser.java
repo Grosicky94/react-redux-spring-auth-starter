@@ -1,12 +1,16 @@
 package com.example.spring.server.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 
 @Entity
 @Table(name = "USERS")
-public class ApplicationUser extends AuditModel {
+public class ApplicationUser extends AuditModel  {
     @Id
     @GeneratedValue(generator = "user_generator")
     @SequenceGenerator(

@@ -4,7 +4,7 @@
 [![devDependency Status](https://david-dm.org/bhavin-prajapati/react-redux-node-auth-starter/dev-status.svg?style=flat-square)](https://david-dm.org/bhavin-prajapati/react-redux-node-auth-starter#info=devDependencies)
 
 
-# react-redux-node-auth-starter
+# react-redux-spring-auth-starter
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 Below you will find some information on how to perform common tasks.<br>
@@ -20,7 +20,7 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 - [Quick Setup](#quick-setup-for-client)
 - [Client-side Libraries](#client-side-libraries)
-- [Available Scripts](#available-client-scripts)
+- [Available Client Scripts](#available-client-scripts)
   - [npm run start](#npm-run-start)
   - [npm run test](#npm-run-test)
   - [npm run build](#npm-run-build)
@@ -32,12 +32,9 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 - [Quick Setup](#quick-setup-for-server)
 - [Server-side Libraries](#server-side-libraries)
-- [Available Scripts](#available-server-scripts)
-  - [npm run db:create](#npm-run-db:create)
-  - [npm run db:migrate](#npm-run-db:migrate)
-  - [npm run db:seed](#npm-run-db:seed)
-  - [npm run db:setup](#npm-run-db:setup)
-  - [npm run start](#npm-run-start)
+- [Setup for PostgresSQL](#setup-for-postgressql)
+- [Available Server Scripts](#available-server-scripts)
+  - [mvn spring-boot:run](#mvn spring-boot:run)
 
 ## Quick Setup for Client
 
@@ -57,7 +54,7 @@ npm run start
 * Istanbul
 * Axios
 
-## Available Server Scripts
+## Available Client Scripts
 
 ### `npm run start`
 
@@ -102,7 +99,13 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Quick Setup for PostgresSQL
+## Server-side Libraries
+
+* Spring Boot
+* Spring Security
+* JPA
+
+## Setup for PostgresSQL
 
 In the project directory, you can run:
 
@@ -112,41 +115,9 @@ CREATE USER root WITH PASSWORD 'password123';
 GRANT ALL PRIVILEGES ON DATABASE "database_dev" to root;
 ```
 
-## Quick Setup for Server
-
-In the project directory, you can run:
-
-```sh
-npm install
-npm run db:setup
-npm run start
-```
-## Server-side Libraries
-
-* NodeJS
-* Express
-* Sequalize
-* Babel
-
 ## Available Server Scripts
 
-### `npm run db:create`
-
-Creates the database based on configuration. (server/db/config)<br>
-
-### `npm run db:migrate`
-
-Runs the migrations on the database. (server/db/migrations)<br>
-
-### `npm run db:seed`
-
-Runs the seeds on the database. (server/db/seeders)<br>
-
-### `npm run db:setup`
-
-Setup the whole database with one command.<br>
-
-### `npm run start`
+### `mvn spring-boot:run`
 
 Runs the server in the development mode.<br>
 It runs on [http://localhost:8080](http://localhost:8080) to make calls to API.

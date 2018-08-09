@@ -34,7 +34,7 @@ You can find the most recent version of this guide [here](https://github.com/fac
 - [Server-side Libraries](#server-side-libraries)
 - [Setup for PostgresSQL](#setup-for-postgressql)
 - [Available Server Scripts](#available-server-scripts)
-  - [mvn spring-boot:run](#mvn-spring-boot:run)
+  - [mvn spring-boot:run](#mvn-spring-boot-run)
 
 ## Quick Setup for Client
 

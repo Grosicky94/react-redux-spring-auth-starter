@@ -17,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -42,7 +43,6 @@ public class UserController {
     JwtTokenProvider tokenProvider;
 
     @PostMapping(path="/register", produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @CrossOrigin(origins = "http://localhost:3000")
     public Map<String, Object> register(@Valid @RequestBody MultiValueMap paramMap) {
         HashMap<String, Object> response = new HashMap<>();
         String username = (String)paramMap.getFirst("username");
@@ -79,56 +79,64 @@ public class UserController {
         }
     }
 
-    @PostMapping(path="/signin", produces=MediaType.APPLICATION_JSON_VALUE)
-    @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<Map<String, Object>> signin(@Valid @RequestBody MultiValueMap paramMap, HttpServletResponse resp) {
+    @PostMapping(path="/signin", produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public Map<String, Object> signin(@Valid @RequestBody MultiValueMap paramMap, HttpServletRequest request, HttpServletResponse resp) {
         HashMap<String, Object> response = new HashMap<>();
         String username = (String)paramMap.getFirst("username");
         String password = (String)paramMap.getFirst("password");
-        if(username != null && password != null) {
-            ApplicationUser applicationUser = userRepository.findByUsername(username);
-            if (applicationUser != null) {
-                boolean isPasswordValid = passwordEncoder.matches(password, applicationUser.getPassword());
-                if(isPasswordValid) {
-                    Authentication authentication = authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    username,
-                                    password
-                            )
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    String jwt = tokenProvider.generateToken(authentication);
 
-                    final Cookie cookie = new Cookie(SESSION_COOKIE_NAME, jwt);
-                    cookie.setSecure(true);
-                    cookie.setHttpOnly(true);
-                    cookie.setMaxAge(COOKIE_EXPIRATION_TIME);
-                    resp.addCookie(cookie);
+        resp.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
 
-                    response.put("message", "User login successful");
-                    return ResponseEntity.ok(response);
+        try {
+            if (username != null && password != null) {
+                ApplicationUser applicationUser = userRepository.findByUsername(username);
+                if (applicationUser != null) {
+                    boolean isPasswordValid = passwordEncoder.matches(password, applicationUser.getPassword());
+                    if (isPasswordValid) {
+                        Authentication authentication = authenticationManager.authenticate(
+                                new UsernamePasswordAuthenticationToken(
+                                        username,
+                                        password
+                                )
+                        );
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        String jwt = tokenProvider.generateToken(authentication);
+
+                        final Cookie cookie = new Cookie(SESSION_COOKIE_NAME, jwt);
+                        //cookie.setSecure(true);
+                        cookie.setPath("/");
+                        cookie.setHttpOnly(true);
+                        cookie.setMaxAge(COOKIE_EXPIRATION_TIME);
+                        resp.addCookie(cookie);
+
+                        System.out.print("1");
+                        response.put("message", "User login successful");
+                        return response;
+                    } else {
+                        System.out.print("2");
+                        response.put("error", "Invalid username or password");
+                        return response;
+                    }
                 } else {
+                    System.out.print("3");
                     response.put("error", "Invalid username or password");
-                    return ResponseEntity.ok(response);
+                    return response;
                 }
-            } else {
-                response.put("error", "Invalid username or password");
-                return ResponseEntity.ok(response);
             }
-        } else {
-            response.put("error", "Invalid request");
-            return ResponseEntity.ok(response);
+        } catch (Exception e){
+            System.out.print(e.getMessage());
         }
+        response.put("error", "Invalid request");
+        return response;
     }
 
     @GetMapping("/user/{userId}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ApplicationUser getUserById(@PathVariable Long userId) {
         return userRepository.getOne(userId);
     }
 
     @PutMapping("/user/{userId}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ApplicationUser updateUser(@PathVariable Long userId, @Valid @RequestBody ApplicationUser applicationUserRequest) {
         return userRepository.findById(userId)
                 .map(user -> {
@@ -139,7 +147,6 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{userId}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         return userRepository.findById(userId)
                 .map(user -> {

@@ -22,7 +22,7 @@ export class NavigationBarComponent extends Component {
       <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href="/">React-Redux-Node-Auth-Starter</a>
+            <a href="/">React-Redux-Spring-Auth-Starter</a>
           </Navbar.Brand>
         </Navbar.Header>
         {dropDown}

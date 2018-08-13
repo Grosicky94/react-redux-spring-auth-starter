@@ -1,5 +1,6 @@
 import qs from 'qs';
-import { BASE_URL, REGISTER_ENDPOINT, LOGIN_ENDPOINT, USER_ENDPOINT, LOGOUT_ENDPOINT, DASHBOARD_ENDPOINT } from './constants';
+import { BASE_URL, REGISTER_ENDPOINT, LOGIN_ENDPOINT, USER_ENDPOINT, LOGOUT_ENDPOINT, DASHBOARD_ENDPOINT, SESSION_COOKIE_NAME } from './constants';
+import { getCookie } from './cookie';
 
 const register = (username, email, password) => {
   const options = {
@@ -37,7 +38,10 @@ const login = (username, password) => {
 const getUser = () => {
   const options = {
     method: 'get',
-    credentials: 'include' // Don't forget to specify this if you need cookies
+    //credentials: 'include' // Don't forget to specify this if you need cookies
+    headers: {
+      'Authorization': `Bearer ${getCookie(SESSION_COOKIE_NAME)}`
+    },
   };
   return fetch(BASE_URL + USER_ENDPOINT, options)
     .then(res => res.json());
@@ -46,7 +50,10 @@ const getUser = () => {
 const logout = () => {
   const options = {
     method: 'get',
-    credentials: 'include' // Don't forget to specify this if you need cookies
+    //credentials: 'include' // Don't forget to specify this if you need cookies
+    headers: {
+      'Authorization': `Bearer ${getCookie(SESSION_COOKIE_NAME)}`
+    },
   };
   return fetch(BASE_URL + LOGOUT_ENDPOINT, options)
     .then(res => res.json());
@@ -55,7 +62,10 @@ const logout = () => {
 const loadDashboard = () => {
   const options = {
     method: 'get',
-    credentials: 'include' // Don't forget to specify this if you need cookies
+    //credentials: 'include' // Don't forget to specify this if you need cookies
+    headers: {
+      'Authorization': `Bearer ${getCookie(SESSION_COOKIE_NAME)}`
+    },
   };
   return fetch(BASE_URL + DASHBOARD_ENDPOINT, options)
     .then(res => res.json());

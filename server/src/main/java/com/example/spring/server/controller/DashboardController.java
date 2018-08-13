@@ -16,7 +16,7 @@ public class DashboardController {
     @GetMapping("/")
     public Map<String, Object> loadDashboard(HttpServletRequest request, HttpServletResponse resp) {
         HashMap<String, Object> response = new HashMap<>();
-        response.put("data", "User login successful");
+        response.put("data", "This sentence is retrieved from a secure endpoint and can only be accessed when signed in.");
         return response;
     }
 }

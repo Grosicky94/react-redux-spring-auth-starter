@@ -83,8 +83,8 @@ public class AuthController {
         String username = (String)paramMap.getFirst("username");
         String password = (String)paramMap.getFirst("password");
 
-        resp.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
-        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        //resp.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        //resp.setHeader("Access-Control-Allow-Credentials", "true");
 
         try {
             if (username != null && password != null) {
@@ -104,7 +104,7 @@ public class AuthController {
                         final Cookie cookie = new Cookie(SESSION_COOKIE_NAME, jwt);
                         //cookie.setSecure(true);
                         cookie.setPath("/");
-                        cookie.setHttpOnly(true);
+                        //cookie.setHttpOnly(true);
                         cookie.setMaxAge(COOKIE_EXPIRATION_TIME);
                         resp.addCookie(cookie);
 
@@ -133,7 +133,7 @@ public class AuthController {
         final Cookie cookie = new Cookie(SESSION_COOKIE_NAME, "");
         //cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        //cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         resp.addCookie(cookie);
 

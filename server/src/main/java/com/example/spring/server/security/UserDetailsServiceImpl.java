@@ -2,6 +2,7 @@ package com.example.spring.server.security;
 
 import com.example.spring.server.model.ApplicationUser;
 import com.example.spring.server.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import static java.util.Collections.emptyList;
 
 @Service
+@Configurable
 public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 

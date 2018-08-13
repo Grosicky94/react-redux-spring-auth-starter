@@ -49,14 +49,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutUrl(LOG_OUT_URL).logoutSuccessUrl(LOG_IN_PAGE_URL).deleteCookies(SESSION_COOKIE_NAME).invalidateHttpSession(true).permitAll()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
+        return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**");

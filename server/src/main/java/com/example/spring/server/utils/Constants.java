@@ -14,6 +14,6 @@ public final class Constants {
     public static final String HEADER_STRING = "Authorization";
     public static final String LOG_IN_PAGE_URL = "/login";
     public static final String REGISTER_URL = "/auth/register";
-    public static final String SIGN_IN_URL = "/auth/signin";
+    public static final String LOG_IN_URL = "/auth/login";
     public static final String LOG_OUT_URL = "/auth/logout";
 }

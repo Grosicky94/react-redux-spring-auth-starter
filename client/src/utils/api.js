@@ -1,5 +1,5 @@
 import qs from 'qs';
-import { BASE_URL, REGISTER_ENDPOINT, SIGNIN_ENDPOINT, USER_ENDPOINT, LOGOUT_ENDPOINT, DASHBOARD_ENDPOINT } from './constants';
+import { BASE_URL, REGISTER_ENDPOINT, LOGIN_ENDPOINT, USER_ENDPOINT, LOGOUT_ENDPOINT, DASHBOARD_ENDPOINT } from './constants';
 
 const register = (username, email, password) => {
   const options = {
@@ -30,7 +30,7 @@ const login = (username, password) => {
       password: password
     })
   };
-  return fetch(BASE_URL + SIGNIN_ENDPOINT, options)
+  return fetch(BASE_URL + LOGIN_ENDPOINT, options)
     .then(res => res.json());
 };
 

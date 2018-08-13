@@ -19,9 +19,8 @@ export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';
 // API
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 export const REGISTER_ENDPOINT = '/auth/register';
-export const SIGNIN_ENDPOINT = '/auth/signin';
-export const USER_ENDPOINT = '/auth/user';
+export const LOGIN_ENDPOINT = '/auth/login';
 export const LOGOUT_ENDPOINT = '/auth/logout';
+export const USER_ENDPOINT = '/auth/user';
 export const DASHBOARD_ENDPOINT = '/dashboard';
 export const SESSION_COOKIE_NAME = '_sid';
-

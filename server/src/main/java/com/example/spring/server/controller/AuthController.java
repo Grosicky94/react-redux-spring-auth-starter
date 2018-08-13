@@ -77,7 +77,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping(path="/signin", produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(path="/login", produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Map<String, Object> signin(@Valid @RequestBody MultiValueMap paramMap, HttpServletRequest request, HttpServletResponse resp) {
         HashMap<String, Object> response = new HashMap<>();
         String username = (String)paramMap.getFirst("username");

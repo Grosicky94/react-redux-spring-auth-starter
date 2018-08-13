@@ -17,8 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 
-import static com.example.spring.server.utils.Constants.REGISTER_URL;
-import static com.example.spring.server.utils.Constants.SIGN_IN_URL;
+import static com.example.spring.server.utils.Constants.*;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -40,6 +39,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, REGISTER_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SIGN_IN_URL).permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage(LOG_IN_PAGE_URL).permitAll()
+                .and()
+                .logout().logoutUrl(LOG_OUT_URL).logoutSuccessUrl(LOG_IN_PAGE_URL).deleteCookies(SESSION_COOKIE_NAME).invalidateHttpSession(true).permitAll()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 // this disables session creation on Spring Security

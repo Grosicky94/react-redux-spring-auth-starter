@@ -5,7 +5,6 @@ import com.example.spring.server.model.ApplicationUser;
 import com.example.spring.server.repository.UserRepository;
 import com.example.spring.server.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +26,7 @@ import static com.example.spring.server.utils.Constants.SESSION_COOKIE_NAME;
 
 @RestController
 @RequestMapping("/auth")
-public class UserController {
+public class AuthController {
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -110,16 +108,13 @@ public class UserController {
                         cookie.setMaxAge(COOKIE_EXPIRATION_TIME);
                         resp.addCookie(cookie);
 
-                        System.out.print("1");
                         response.put("message", "User login successful");
                         return response;
                     } else {
-                        System.out.print("2");
                         response.put("error", "Invalid username or password");
                         return response;
                     }
                 } else {
-                    System.out.print("3");
                     response.put("error", "Invalid username or password");
                     return response;
                 }
@@ -128,6 +123,21 @@ public class UserController {
             System.out.print(e.getMessage());
         }
         response.put("error", "Invalid request");
+        return response;
+    }
+
+    @GetMapping("/logout")
+    public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse resp) {
+        HashMap<String, Object> response = new HashMap<>();
+
+        final Cookie cookie = new Cookie(SESSION_COOKIE_NAME, "");
+        //cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        resp.addCookie(cookie);
+
+        response.put("message", "User login successful");
         return response;
     }
 

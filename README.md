@@ -120,7 +120,9 @@ In the project directory, you can run:
 ```sh
 CREATE USER root WITH PASSWORD 'password123';
 
-GRANT ALL PRIVILEGES ON DATABASE "database_dev" to root;
+GRANT ALL PRIVILEGES ON DATABASE "database_development" to root;
+
+ALTER USER root CREATEDB;
 ```
 
 ## Available Server Scripts

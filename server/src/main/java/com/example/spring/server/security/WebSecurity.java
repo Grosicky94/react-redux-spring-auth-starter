@@ -57,8 +57,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers(HttpMethod.POST, REGISTER_URL, LOG_IN_URL).permitAll()
             .anyRequest().authenticated().and()
-            .formLogin().loginPage(LOG_IN_PAGE_URL).permitAll().and()
-            .logout().logoutUrl(LOG_OUT_URL).logoutSuccessUrl(LOG_IN_PAGE_URL).deleteCookies(SESSION_COOKIE_NAME).invalidateHttpSession(true).permitAll();
+            .formLogin().loginPage(LOG_IN_PAGE_URL).permitAll();
+            //.logout().logoutUrl(LOG_OUT_URL).deleteCookies(SESSION_COOKIE_NAME);
 
         http.addFilterBefore(new JwtAuthenticationFilter(tokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class);
     }

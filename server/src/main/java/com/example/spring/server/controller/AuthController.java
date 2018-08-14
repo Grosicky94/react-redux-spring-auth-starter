@@ -128,18 +128,22 @@ public class AuthController {
         return response;
     }
 
-    @GetMapping("/logout")
+    @GetMapping(path="/logout")
     public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse resp) {
         HashMap<String, Object> response = new HashMap<>();
 
-        final Cookie cookie = new Cookie(SESSION_COOKIE_NAME, "");
-        //cookie.setSecure(true);
+        resp.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+
+        String jwt = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, jwt);
+        //cookie.setSecure(false);
         cookie.setPath("/");
-        //cookie.setHttpOnly(true);
+        //cookie.setHttpOnly(false);
         cookie.setMaxAge(0);
         resp.addCookie(cookie);
 
-        response.put("message", "User login successful");
+        response.put("message", "User logout successful");
         return response;
     }
 
@@ -162,7 +166,7 @@ public class AuthController {
                 }).orElseThrow(() -> new ResourceNotFoundException("ApplicationUser not found with id " + userId));
     }
 
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/user")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         return userRepository.findById(userId)
                 .map(user -> {

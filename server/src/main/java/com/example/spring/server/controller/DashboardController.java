@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/dashboard")
+@RequestMapping("/")
 public class DashboardController {
 
-    @GetMapping("/")
+    @GetMapping("/dashboard")
     public Map<String, Object> loadDashboard(HttpServletRequest request, HttpServletResponse resp) {
         HashMap<String, Object> response = new HashMap<>();
         response.put("data", "This sentence is retrieved from a secure endpoint and can only be accessed when signed in.");

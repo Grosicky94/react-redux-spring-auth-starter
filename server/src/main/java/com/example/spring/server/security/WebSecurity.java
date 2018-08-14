@@ -1,8 +1,10 @@
 package com.example.spring.server.security;
 
+import com.example.spring.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -33,6 +36,12 @@ import static com.example.spring.server.utils.Constants.*;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
@@ -40,20 +49,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, REGISTER_URL).permitAll()
-                .antMatchers(HttpMethod.POST, LOG_IN_URL).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage(LOG_IN_PAGE_URL).permitAll()
-                .and()
-                .logout().logoutUrl(LOG_OUT_URL).logoutSuccessUrl(LOG_IN_PAGE_URL).deleteCookies(SESSION_COOKIE_NAME).invalidateHttpSession(true).permitAll()
-                .and()
-                // this disables session creation on Spring Security
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf().disable()
+            .cors().and()
+            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)).and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .authorizeRequests()
+            .antMatchers(HttpMethod.OPTIONS).permitAll()
+            .antMatchers(HttpMethod.POST, REGISTER_URL, LOG_IN_URL).permitAll()
+            .anyRequest().authenticated().and()
+            .formLogin().loginPage(LOG_IN_PAGE_URL).permitAll().and()
+            .logout().logoutUrl(LOG_OUT_URL).logoutSuccessUrl(LOG_IN_PAGE_URL).deleteCookies(SESSION_COOKIE_NAME).invalidateHttpSession(true).permitAll();
 
-        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(new JwtAuthenticationFilter(tokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -61,7 +68,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**");
+                registry.addMapping("/**")
+                    .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
             }
         };
     }
@@ -75,12 +83,5 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
     }
 }

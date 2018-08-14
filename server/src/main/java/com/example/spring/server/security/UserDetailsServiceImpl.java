@@ -2,6 +2,7 @@ package com.example.spring.server.security;
 
 import com.example.spring.server.model.ApplicationUser;
 import com.example.spring.server.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,11 +15,9 @@ import static java.util.Collections.emptyList;
 @Service
 @Configurable
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserRepository applicationUserRepository) {
-        this.userRepository = applicationUserRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,6 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return new User(user.getUsername(), user.getPassword(), emptyList());
+        return new User(user.getId().toString(), user.getPassword(), emptyList());
     }
 }

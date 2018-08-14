@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 import static com.example.spring.server.utils.Constants.COOKIE_EXPIRATION_TIME;
 import static com.example.spring.server.utils.Constants.SESSION_COOKIE_NAME;
+import static java.util.Collections.emptyList;
 
 @RestController
 @RequestMapping("/auth")
@@ -83,8 +85,8 @@ public class AuthController {
         String username = (String)paramMap.getFirst("username");
         String password = (String)paramMap.getFirst("password");
 
-        //resp.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
-        //resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
 
         try {
             if (username != null && password != null) {
@@ -141,12 +143,16 @@ public class AuthController {
         return response;
     }
 
-    @GetMapping("/user/{userId}")
-    public ApplicationUser getUserById(@PathVariable Long userId) {
-        return userRepository.getOne(userId);
+    @GetMapping("/user")
+    public Map<String, Object> getUser() {
+        HashMap<String, Object> response = new HashMap<>();
+        ApplicationUser applicationUser = (ApplicationUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        response.put("username", applicationUser.getUsername());
+        response.put("email", applicationUser.getEmail());
+        return response;
     }
 
-    @PutMapping("/user/{userId}")
+    @PutMapping("/user")
     public ApplicationUser updateUser(@PathVariable Long userId, @Valid @RequestBody ApplicationUser applicationUserRequest) {
         return userRepository.findById(userId)
                 .map(user -> {

@@ -103,10 +103,11 @@ public class AuthController {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                         String jwt = tokenProvider.generateToken(authentication);
 
-                        final Cookie cookie = new Cookie(SESSION_COOKIE_NAME, jwt);
+                        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, jwt);
                         //cookie.setSecure(true);
                         cookie.setPath("/");
-                        //cookie.setHttpOnly(true);
+                        //cookie.setHttpOnly(false);
+                        //cookie.setDomain("localhost");
                         cookie.setMaxAge(COOKIE_EXPIRATION_TIME);
                         resp.addCookie(cookie);
 
@@ -140,6 +141,7 @@ public class AuthController {
         //cookie.setSecure(false);
         cookie.setPath("/");
         //cookie.setHttpOnly(false);
+        //cookie.setDomain("localhost");
         cookie.setMaxAge(0);
         resp.addCookie(cookie);
 

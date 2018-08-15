@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -55,10 +56,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
+            .antMatchers(HttpMethod.GET, LOG_OUT_URL).permitAll()
             .antMatchers(HttpMethod.POST, REGISTER_URL, LOG_IN_URL).permitAll()
             .anyRequest().authenticated().and()
             .formLogin().loginPage(LOG_IN_PAGE_URL).permitAll();
-            //.logout().logoutUrl(LOG_OUT_URL).deleteCookies(SESSION_COOKIE_NAME);
+            //.logout().logoutRequestMatcher(new AntPathRequestMatcher(LOG_OUT_URL)).deleteCookies(SESSION_COOKIE_NAME).permitAll();
 
         http.addFilterBefore(new JwtAuthenticationFilter(tokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class);
     }

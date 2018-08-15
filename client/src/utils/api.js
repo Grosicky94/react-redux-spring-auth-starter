@@ -50,7 +50,7 @@ const getUser = () => {
 const logout = () => {
   const options = {
     method: 'get',
-    //credentials: 'include' // Don't forget to specify this if you need cookies
+    credentials: 'same-origin', // Don't forget to specify this if you need cookies
     headers: {
       'Authorization': `Bearer ${getCookie(SESSION_COOKIE_NAME)}`
     },
